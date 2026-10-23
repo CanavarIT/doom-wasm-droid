@@ -20,17 +20,21 @@ jobs:
 
       - name: Activate Emscripten Environment
         run: |
-          # Явно активируем окружение Emscripten для текущей сессии
           source "$EMSDK/emsdk_env.sh"
-          # Проверяем, что emcc доступен
           emcc --version
-          # Сохраняем пути в GITHUB_PATH, чтобы следующие шаги тоже видели emcc
           echo "$EMSDK" >> $GITHUB_PATH
           echo "$EMSDK/upstream/emscripten" >> $GITHUB_PATH
 
-      - name: Build
+      - name: Build (patched)
         run: |
           chmod +x scripts/*.sh
+          # Обходим проблемную проверку Autotools
+          export ac_cv_func_malloc_0_nonnull=yes
+          export ac_cv_func_realloc_0_nonnull=yes
+          export CC=emcc
+          export CXX=em++
+          export EMCC_CFLAGS="-s USE_SDL=2 -s USE_SDL_MIXER=2 -s USE_SDL_NET=2"
+          
           ./scripts/clean.sh
           ./scripts/build.sh
 
