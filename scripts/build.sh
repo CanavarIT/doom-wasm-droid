@@ -6,4 +6,6 @@ emmake make clean
 emconfigure autoreconf -fiv
 ac_cv_exeext=".html" emconfigure ./configure --host=none-none-none
 
+export LDFLAGS="--preload-file doom1.wad -s ALLOW_MEMORY_GROWTH=1"
+
 emmake make
