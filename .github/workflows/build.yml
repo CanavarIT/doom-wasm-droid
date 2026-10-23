@@ -1,0 +1,33 @@
+name: Build Doom WASM
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y automake autoconf libtool pkg-config libsdl2-dev libsdl2-mixer-dev libsdl2-net-dev
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 'latest'
+
+      - name: Build
+        run: |
+          chmod +x scripts/*.sh
+          ./scripts/clean.sh
+          ./scripts/build.sh
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: doom-wasm-build
+          path: |
+            src/*.js
+            src/*.wasm
