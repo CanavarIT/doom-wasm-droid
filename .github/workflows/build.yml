@@ -18,6 +18,16 @@ jobs:
         with:
           version: 'latest'
 
+      - name: Activate Emscripten Environment
+        run: |
+          # Явно активируем окружение Emscripten для текущей сессии
+          source "$EMSDK/emsdk_env.sh"
+          # Проверяем, что emcc доступен
+          emcc --version
+          # Сохраняем пути в GITHUB_PATH, чтобы следующие шаги тоже видели emcc
+          echo "$EMSDK" >> $GITHUB_PATH
+          echo "$EMSDK/upstream/emscripten" >> $GITHUB_PATH
+
       - name: Build
         run: |
           chmod +x scripts/*.sh
