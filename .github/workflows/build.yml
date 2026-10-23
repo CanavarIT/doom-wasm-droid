@@ -29,11 +29,6 @@ jobs:
         run: |
           chmod +x scripts/*.sh
           ./scripts/clean.sh
-          
-          # Передаем флаги. EMCC_CFLAGS вшивает файл, а LDFLAGS помогает configure не падать
-          export EMCC_CFLAGS="--preload-file doom1.wad"
-          export LDFLAGS="--preload-file doom1.wad -s ALLOW_MEMORY_GROWTH=1"
-          
           ./scripts/build.sh
 
       - name: Upload artifacts
