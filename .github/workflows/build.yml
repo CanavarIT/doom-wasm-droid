@@ -16,7 +16,6 @@ jobs:
       - name: Setup Emscripten (OLD VERSION)
         uses: mymindstorm/setup-emsdk@v14
         with:
-          # Указываем старую версию, совместимую с Cloudflare Doom-wasm
           version: '3.1.25'
 
       - name: Activate Emscripten Environment
@@ -29,8 +28,11 @@ jobs:
       - name: Build
         run: |
           chmod +x scripts/*.sh
-          # Пробуем собрать без лишних переменных, только с активированным окружением
           ./scripts/clean.sh
+          
+          # ВШИВАЕМ WAD В СБОРКУ!
+          export EMCC_CFLAGS="--preload-file doom1.wad"
+          
           ./scripts/build.sh
 
       - name: Upload artifacts
@@ -40,3 +42,4 @@ jobs:
           path: |
             src/*.js
             src/*.wasm
+            src/*.data
